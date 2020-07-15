@@ -1,0 +1,22 @@
+Using Google Public DNS
+docker run -it --dns=8.8.8.8 --name="mycontainer1" docker.io/ubuntu:latest /bin/bash
+
+# check within container entry in resolve.conf
+cat /etc/resolv.conf 
+
+Using Domain Search "mydomain.local"
+Using Google Public DNS
+
+docker run -it --dns=8.8.8.8 --dns-search="mydomain.local" --name="mycontainer2" docker.io/ubuntu:latest /bin/bash
+
+# check within container entry in resolve.conf
+cat /etc/resolv.conf
+
+docker run -it --dns=8.8.8.8 --dns-search="mydomain.local" --name="mycontainer3" -v /local_vol -v /home/tcox:/remote_vol docker.io/ubuntu:latest /bin/bash
+
+# within container run the following cmd
+
+df -h
+cd /local_vol/
+cd /remote_vol/
+cat /etc/resolve.conf
