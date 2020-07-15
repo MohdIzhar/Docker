@@ -1,0 +1,2 @@
+docker run -d --name mydb -e MYSQL_ROOT_PASSWORD=redhat -e MYSQL_USER=izhar -e MYSQL_PASSWORD=abc123 -e MYSQL_DATABASE=wpdb  mysql
+docker run -d --name wp --link mydb -e WORDPRESS_DB_HOST=mydb  -e WORDPRESS_DB_USER=izhar -e WORDPRESS_DB_PASSWORD=abc123 -e WORDPRESS_DB_NAME=wpdb -p 8080:80 wordpress
