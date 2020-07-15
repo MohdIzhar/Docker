@@ -1,0 +1,28 @@
+# Download jdk in current folder
+
+# build the dockerfile
+
+docker build -t centos/jdk8:v1 .
+
+This file contain the env variable to setup using export command
+
+# create docker container to check the env
+
+docker run -it --name jdk_env centos/jdk8:v1 /bin/bash
+
+env	# you will see the setup path of JAVA_HOME
+
+cat ~/.bashrc	# also see the path added
+
+
+# Now adding the JAVA_BIN path using ENV instruction
+
+I have renamed the previous docker file as Dockerfile.export and in new Dockerfile added the ENV instruction
+
+docker build -t centos/jdk8:v1 .
+
+# create container
+
+docker run -it --name env_jdk centos/jdk8:v1 /bin/bash
+
+within contianer run env, you will see the path has been added

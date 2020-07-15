@@ -1,0 +1,22 @@
+# build the dockerfile 
+
+docker build -t centos/cmd:v1 .
+
+# now create the docker contianer by running the following cmd and observer the output
+
+docker run -it --name cmd_c1 centos/cmd:v1
+
+# check the docker container are up or down
+
+docker ps
+
+# now start the container again
+
+docker start cmd_c1
+
+# again check the containers are up or down
+
+docker ps 
+
+you will see the container start and gives the output and then exited
+So, the CMD is run when the container is instantiated to display some output

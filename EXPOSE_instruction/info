@@ -1,0 +1,41 @@
+# Build the dockerfile 
+
+docker build -t centos/httpd:v1 .
+
+# create the docker container
+
+docker run -d --name webserver centos/httpd:v1
+
+Note till now we have expose the port 80 in docker file
+
+from base host do curl
+
+curl http://containerIP
+
+# now launch the container with -P option
+
+docker run -d --name web2 -P centos/httpd:v1
+
+docker ps -a # to check the port mapping
+
+No port mapping is shown because we haven't expose in dockerfile
+
+docker stop web2
+
+docker run -d --name web3 -p 8080:80 centos/httpd:v1
+
+docker ps -a
+
+Now we can access it using hostip with port 8080
+
+# exposing port 80 in dockerfile goto Dockerfile and add new instruciton EXPOSE 80
+# and re build the Dockerfile
+
+docker build -t centos/httpd:v1
+
+docker run -d --name web4 -p centos/httpd:v1
+
+docker ps -a now you will see the port automatically mapped to base host port
+
+
+

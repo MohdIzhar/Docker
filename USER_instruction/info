@@ -1,0 +1,26 @@
+# first run the Dockerfile -> Dockerfile by renaming it to Dockerfile and note other file must be rename to other name (Dockerfile containing non RUN cmd)
+then run the docker build cmd
+
+docker build -t centos/nonroot:v1 .
+
+# launch the container and see output
+docker run -it --name nonroot_c1 centos/nonroot:v1
+
+# Now build the other dockerfile by renaming it to Dockerfile and other file must e renamed to other (Dockerfile containing RUN cmd)
+docker build -t centos/nonroot:v1 .
+
+# now again launch the container
+docker run -it --name nonroot_c2 centos/nonroot:v1 
+
+Now you will be entering into container but now you are non-previlege user
+
+exit the container
+
+# start the container again (nonroot_c2)
+# inorder to enter the container as root use the following command
+
+docker exec -it -u 0 nonroot_c2 /bin/bash
+
+# within the container run the following cmd 
+
+ps aux

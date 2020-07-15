@@ -1,0 +1,28 @@
+# build the  dockerfile
+docker build -t centos/entry:v1 .
+
+# launch the container from this image
+
+docker run --name entrypoint_c1 centos/entry:v1
+
+You will see the same output as emiited by CMD instruction
+
+# now launch the container from CMD image
+
+docker run --name cmd_c3 centos/cmd:v1
+
+same output as entrypoint
+
+
+#######################
+## CMD VS ENTRYPOINT ##
+#######################
+
+# run the following cmd to understand the difference between CMD and ENTRYPOINT
+
+docker run --name cmd_c4 centos/cmd:v1 /bin/echo "New meassage from CMD"
+
+docker run --name entry_c2 centos/entry:v1 /bin/echo "New message from ENTRYPOINT"
+
+You will see that CMD instruction output is overwritten from default but in ENTRYPOINT instruction no output is overwritten
+

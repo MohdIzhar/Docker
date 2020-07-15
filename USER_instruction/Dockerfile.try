@@ -1,0 +1,10 @@
+# Base image
+FROM centos:latest
+
+# Author
+
+MAINTAINER MohdIzhar mdizhar@gmial.com
+
+# specifying user
+
+USER user

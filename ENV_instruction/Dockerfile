@@ -1,0 +1,29 @@
+# Base image
+FROM centos:latest
+
+# Author
+
+MAINTAINER MohdIzhar mdizhar@gmial.com
+
+# adding user
+
+RUN useradd -ms /bin/bash user
+
+# Copying the items 
+
+COPY jdk* .
+
+# installing jdk
+
+RUN rpm -ivh jdk*
+
+
+# specifying user
+
+USER user
+
+# specifying environmet variables
+
+RUN cd ~ && echo "export JAVA_HOME=/usr/java/jdk1.8.0" >> ~/.bashrc
+
+ENV JAVA_BIN /usr/java/jdk1.8.0/jre/bin
