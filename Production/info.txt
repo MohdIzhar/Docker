@@ -1,0 +1,114 @@
+# create a docker container from centos base image and install the following tools
+
+-> docker run -it centos:latest /bin/bash
+te a docker container from centos base image and install the following tools
+
+-> docker run -it centos:latest /bin/bash
+
+# within docker container run the following command
+
+-> yum update -y 
+-> yum install which sudo httpd php openssh-server -y
+
+# start the services by adding entry into file bashrc file
+
+-> which httpd
+-> which sshd
+-> vi ~/.bashrc
+
+# download an webserver on your basehost folder and mount that folder to new container and also initialize 
+the git to have prodcution environment from both sides
+
+-> on basehost
+-> git init (where you have downloaded webserver)
+-> git status
+-> git add .
+-> git commit -m "initial commit"
+
+-> docker run -it --name webtest -v /root/docker/Production/:/var/www/html centos:baseweb /bin/bash
+# within contianer also install git 
+-> cd /var/www/html
+-> ls
+-> yum install git
+
+
+# now commit the final image
+* NOTE:- whenever you run the new container from server image you need to mount the webserver downloaded path from your host
+
+-> docker commit <contianer name> centos:serverv1
+
+# now starting the webserver and mapping port to base host
+
+-> docker run -it --name externalweb -p 8081:80 -v /root/docker/Production/:/var/www/html centos:serverv1 /bin/bash
+
+# within contianer add user test
+
+-> adduser test
+-> passwd test (enter password for test user)
+
+# from base host now do ssh to container user and its ip
+
+-> ssh test@<containerip>
+
+* if error comes up with unprivileges remove the nologin from contianer as rm -rf /run/nologin
+
+# now make the commit to this container as
+
+-> docker stop extrenalweb
+
+-> docker commit externalweb centos:finalweb
+
+-> docker run -dit --name devweb1 -p 8081:80 -v /root/path:/var/www/html centos:finalweb /bin/bash
+
+-> docker run -dit --name devweb2 -p 8082:80 -v /root/path:/var/www/html centos:finalweb /bin/bash
+
+# goto base host and check on browser for webserver test on both port
+
+** Now we will be doing load balancing using nginx
+# install nginx on base host
+-> yum install nginx -y
+# start service, enable
+-> systemctl start nginx
+-> systemctl enable nginx
+
+# goto browser check default port 80 with your host IP it must bring default nginx page
+
+# now making nginx as load balancer
+
+-> cd /etc/nginx
+-> cd conf.d
+-> vi default.conf
+
+# add the following entries
+
+upstream containerapp {
+        server 192.168.43.37:8082; # your basehostIP and mapped container port
+        server 192.168.43.37:8083;
+}
+
+server {
+        listen *:80;
+
+        server_name 192.168.43.37; # your base host IP
+        index index.html index.php; # pages to access
+
+        access_log /var/log/nginx/localweb.log;
+        error_log /var/log/nginx/localerr.log;
+
+        location / {
+                proxy_pass http://containerapp;
+        }
+}
+
+# after making these changes resart nginx
+
+-> systemctl restart nginx
+
+# now goto browser and check the default port webaddress of your base host
+
+-> http://basehostIP
+* now page will be accessed successfully if not check the two important things make sure firewalld is stop or iptables is
+correclty configure and Selinux is also properly configure
+** else for testing turnoff both for a while
+-> systemctl stop firewalld
+-> setenforce 0
